@@ -192,14 +192,19 @@ def inserir_em_lote(tabela, df):
 
     try:
         # insere os dados, ignorando duplicatas
+        antes = con.execute(f"SELECT COUNT(*) FROM {tabela}").fetchall()[0][0]
         con.execute(f"""
             INSERT OR IGNORE INTO {tabela}
             SELECT * FROM temp_df
         """)
 
-        # conta quantos registros foram inseridos
-        result = con.execute("SELECT COUNT(*) as inseridos FROM temp_df").fetchone()[0]
-        print(f" {result} registros inseridos na tabela {tabela}")
+        depois = con.execute(f"SELECT COUNT(*) FROM {tabela}").fetchall()[0][0]
+        print(f" {depois - antes} registros inseridos na tabela {tabela} "
+              f"({len(df)} tentados)")
+
+        # # conta quantos registros foram inseridos
+        # result = con.execute("SELECT COUNT(*) as inseridos FROM temp_df").fetchone()[0]
+        # print(f" {result} registros inseridos na tabela {tabela}")
 
     except Exception as e:
         print(f"Erro ao inserir dados na tabela {tabela}: {str(e)}")
