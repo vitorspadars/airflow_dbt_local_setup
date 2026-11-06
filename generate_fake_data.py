@@ -136,7 +136,7 @@ def gerar_lote_pedidos(cpfs, tamanho_lote):
                     valor_desconto = round(valor_total * random.uniform(0.05, 0.2), 2) if tem_desconto else 0.0
 
                     # gera um codigo de cupom unico baseado em UUID se houver desconto
-                    cupom = f"CUPOM{str(uuid.uuid4())[:8].uper()}" if tem_desconto else None
+                    cupom = f"CUPOM{str(uuid.uuid4())[:8].upper()}" if tem_desconto else None
 
                     chunk_data.append({
                         'id_pedido': str(uuid.uuid4()),
@@ -247,14 +247,14 @@ def main():
         lote_pedidos = 5_000
 
         for i in range(0, total_pedidos, lote_pedidos):
-            print(f"Processandp pedisos {i_1}-{min(i+lote_pedidos, total_pedidos)}...")
+            print(f"Processandp pedisos {i+1}-{min(i+lote_pedidos, total_pedidos)}...")
             dados = gerar_lote_pedidos(cpfs, min(lote_pedidos, total_pedidos - i))
             inserir_em_lote('pedidos', dados)
 
         # estatísticas
         print("\nEstatísticas:")
         total_cad = con.execute("SELECT COUNT(*) FROM cadastros").fetchone()[0]
-        total_ped = con.execute("SELECT COINT(*) FROM pedidos").fetchone()[0]
+        total_ped = con.execute("SELECT COUNT(*) FROM pedidos").fetchone()[0]
         media_pedidos = total_ped / total_cad if total_cad > 0 else 0
 
         
